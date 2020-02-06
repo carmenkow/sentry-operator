@@ -3,11 +3,13 @@ FROM bitnami/kubectl:1.16.3-r54 as kubectl-source
 FROM hadolint/hadolint:v1.17.4-2-g48db165-alpine as hadolint-source
 FROM sentry/mc:RELEASE.2020-01-13T22-49-03Z as mc-source
 FROM golang:1.13.6-alpine3.11
+FROM alpine/helm:3.0.3 as helm3-source
 
 COPY --from=static-docker-source /usr/local/bin/docker /usr/local/bin/docker
 COPY --from=hadolint-source /bin/hadolint /usr/local/bin/hadolint
 COPY --from=kubectl-source /opt/bitnami/kubectl/bin/kubectl /usr/local/bin/kubectl
 COPY --from=mc-source /usr/bin/mc /usr/local/bin/mc
+COPY --from=helm3-source /usr/bin/helm /usr/local/bin/helm
 
 ENV WATCH_NAMESPACE ""
 ENV OPERATOR_NAME "sentry-operator"

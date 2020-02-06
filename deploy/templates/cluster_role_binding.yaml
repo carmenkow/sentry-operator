@@ -1,0 +1,15 @@
+{{- if .Values.rbac.create }}
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/{{ .Values.rbac.apiVersion }}
+metadata:
+  name: {{ template "sentry-operator.fullname" . }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "sentry-operator.serviceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: ClusterRole
+  name: {{ template "sentry-operator.fullname" . }}
+  apiGroup: rbac.authorization.k8s.io
+  name: {{ template "sentry-operator.fullname" . }}
+{{- end }}

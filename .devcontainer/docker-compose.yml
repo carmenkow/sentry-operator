@@ -1,0 +1,31 @@
+---
+version: "3.6"
+
+volumes:
+  sentry:
+    name: sentry-operator
+
+services:
+  sentry:
+    image: sentry/sentry:RELEASE.2020-01-16T22-40-29Z
+    hostname: sentry-operator-sentry
+    container_name: sentry-operator-sentry
+    restart: unless-stopped
+    environment:
+      MINIO_ACCESS_KEY: admin
+      MINIO_SECRET_KEY: testtest
+    volumes:
+      - sentry:/export
+    command: server /export
+  go:
+    container_name: sentry-operator
+    hostname: sentry-operator
+    restart: unless-stopped
+    build: .
+    volumes:
+      - ../:/workspace
+      - ~/.ssh:/root/.ssh:ro
+      - ~/.docker:/root/.docker:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: /bin/sleep 99999h
+

@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sentry-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: sentry-operator
+  template:
+    metadata:
+      labels:
+        name: sentry-operator
+    spec:
+      serviceAccountName: sentry-operator
+      containers:
+        - name: sentry-operator
+          image: robotinfra/sentry-operator:v0.0.1
+          command:
+            - sentry-operator
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              value: "sentry-operator"
